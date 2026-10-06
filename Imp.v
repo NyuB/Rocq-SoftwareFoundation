@@ -2061,7 +2061,8 @@ Inductive com : Type :=
   | CAsgn (x : string) (a : aexp)
   | CSeq (c1 c2 : com)
   | CIf (b : bexp) (c1 c2 : com)
-  | CWhile (b : bexp) (c : com).
+  | CWhile (b : bexp) (c : com)
+  | CFor (init: com) (test: bexp) (incr: com) (body: com).
 
 Notation "'break'" := CBreak (in custom com at level 0) : com_scope.
 Notation "'skip'"  := CSkip
@@ -2079,6 +2080,18 @@ Notation "'if' x 'then' y 'else' z 'end'" := (CIf x y z)
 Notation "'while' x 'do' y 'end'" := (CWhile x y)
   (in custom com at level 89, x at level 99, y at level 99,
     format "'[v' 'while'  x  'do' '/  ' y '/' 'end' ']'") : com_scope.
+
+Notation "'for' init ',' test ',' incr 'do' body 'end'" := (CFor init test incr body)
+  (in custom com at level 89, init at level 99, test at level 99,
+  format "'[v' 'for'  init ',' test ',' incr  'do' '/  ' body '/' 'end' ']'") : com_scope.
+
+Example for_notation :
+<{ for (X := 0), (X <= 2), (X := X + 1) do Y := Y + 1 end }> =
+  CFor (CAsgn "X" (ANum 0)) 
+       (BLe (AId "X") (ANum 2)) 
+       (CAsgn "X" (APlus (AId "X") (ANum 1))) 
+       (CAsgn "Y" (APlus (AId "Y") (ANum 1))).
+Proof. reflexivity. Qed.
 
 (** Next, we need to define the behavior of [break].  Informally,
     whenever [break] is executed in a sequence of commands, it stops
@@ -2200,6 +2213,10 @@ Inductive ceval : com -> state -> result -> state -> Prop :=
       beval st b = true ->
       st  =[ c ]=> st' / SBreak ->
       st  =[ while b do c end ]=> st' / SContinue
+  | E_ForLoop : forall st st' st'' init test incr body,
+    st =[ init ]=> st'/SContinue ->
+    st' =[ while test do body; incr end ]=> st'' / SContinue ->
+    st =[ for init, test, incr do body end]=> st'' / SContinue
   where "st '=[' c ']=>' st' '/' s" := (ceval c st s st').
 
 (** Now prove the following properties of your definition of [ceval]: *)
@@ -2269,6 +2286,7 @@ intros Hb. remember <{ while b do c end }> eqn:EqW. induction H as [| | | | | |
 | st0  stW st'0 b' c' Hb' Hstc IHC HstW' IHW
 (* While True Break *)
 | 
+|
 ]; inversion EqW.
 - subst. rewrite Hb in HbContra. discriminate HbContra.
 - subst. apply IHW. { reflexivity. } { assumption. }
@@ -2314,6 +2332,9 @@ try (intros st2 s2 H2; inversion H2; subst; split; reflexivity).
   + subst. contradicting H H7.
   + subst. apply IHceval in H5 as [_ Contra]. discriminate Contra.
   + subst. apply IHceval in H8 as [Goal _]. split. { assumption. } { reflexivity. }
+- intros. inversion H.
+  + subst. apply IHceval1 in H7 as [Eqst0 _]. rewrite <- Eqst0 in *. clear Eqst0.
+    apply IHceval2 in H8. assumption.
 Qed.
 
 (** [] *)
@@ -2334,8 +2355,6 @@ End BreakImp.
     about making up a concrete Notation for [for] loops, but feel free
     to play with this too if you like.) *)
 
-(* FILL IN HERE
-
-    [] *)
+(* Directly modified above *)
 
 (* 2026-01-07 13:18 *)
