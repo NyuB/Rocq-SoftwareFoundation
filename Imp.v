@@ -1622,7 +1622,10 @@ Example ceval_example2:
     Z := 2
   ]=> (Z !-> 2 ; Y !-> 1 ; X !-> 0).
 Proof.
-try apply E_Seq; apply E_Asgn; reflexivity.
+apply E_Seq with (st' := (X !-> 0)).
+- apply E_Asgn. reflexivity.
+- apply E_Seq with (st' := (Y !-> 1; X !-> 0));
+  apply E_Asgn; reflexivity.
 Qed.
 (** [] *)
 
@@ -1923,8 +1926,17 @@ Inductive sinstr : Type :=
 
 Fixpoint s_execute (st : state) (stack : list nat)
                    (prog : list sinstr)
-                 : list nat
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+                 : list nat :=
+match prog, stack with
+| (SPush n) :: prog', _=> s_execute st (n :: stack) prog'
+| (SLoad v) :: prog', _ => s_execute st ((st v) :: stack) prog'
+| SPlus :: prog', b :: a :: rest => s_execute st ((a + b) :: rest) prog'
+| SMinus :: prog', b :: a :: rest => s_execute st ((a - b) :: rest) prog'
+| SMult :: prog', b :: a :: rest => s_execute st ((a * b) :: rest) prog'
+(* Skip invalid Ops *)
+| (SPlus | SMinus | SMult) :: prog', _ => s_execute st stack prog'
+| [], _ => stack
+end.
 
 Check s_execute.
 
@@ -1932,20 +1944,27 @@ Example s_execute1 :
      s_execute empty_st []
        [SPush 5; SPush 3; SPush 1; SMinus]
    = [2; 5].
-(* FILL IN HERE *) Admitted.
+Proof. reflexivity. Qed.
 
 Example s_execute2 :
      s_execute (X !-> 3) [3;4]
        [SPush 4; SLoad X; SMult; SPlus]
    = [15; 4].
-(* FILL IN HERE *) Admitted.
+Proof. reflexivity. Qed.
 
 (** Next, write a function that compiles an [aexp] into a stack
     machine program. The effect of running the program should be the
     same as pushing the value of the expression on the stack. *)
 
 Fixpoint s_compile (e : aexp) : list sinstr
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *) :=
+match e with
+| AId v => [SLoad v]
+| ANum n => [SPush n]
+| APlus a b => (s_compile a) ++ (s_compile b) ++ [SPlus]
+| AMinus a b => (s_compile a) ++ (s_compile b) ++ [SMinus]
+| AMult a b => (s_compile a) ++ (s_compile b) ++ [SMult]
+end.
 
 (** After you've defined [s_compile], prove the following to test
     that it works. *)
@@ -1953,7 +1972,7 @@ Fixpoint s_compile (e : aexp) : list sinstr
 Example s_compile1 :
   s_compile <{ X - (2 * Y) }>
   = [SLoad X; SPush 2; SLoad Y; SMult; SMinus].
-(* FILL IN HERE *) Admitted.
+Proof. reflexivity. Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, standard (execute_app) *)
@@ -1966,7 +1985,14 @@ Example s_compile1 :
 Theorem execute_app : forall st p1 p2 stack,
   s_execute st stack (p1 ++ p2) = s_execute st (s_execute st stack p1) p2.
 Proof.
-  (* FILL IN HERE *) Admitted.
+intros st p1. induction p1 as [|h1 t1 IH1].
+- intros p2 stack. reflexivity.
+- intros p2 stack. destruct h1;
+  try apply IH1;
+  destruct stack as [|hs ts]; simpl;
+  try apply IH1;
+  try (destruct ts as [|hts tts]; apply IH1).
+Qed.
 
 (** [] *)
 
@@ -1980,14 +2006,23 @@ Proof.
 Lemma s_compile_correct_aux : forall st e stack,
   s_execute st stack (s_compile e) = aeval st e :: stack.
 Proof.
-  (* FILL IN HERE *) Admitted.
+intros st e. induction e;
+try (intros stack; reflexivity);
+try (
+ intros stack; destruct stack as [| hs ts];
+    simpl;
+    rewrite execute_app; rewrite IHe1;
+    rewrite execute_app; rewrite IHe2; reflexivity
+).
+Qed.
 
 (** The main theorem should be a very easy corollary of that lemma. *)
 
 Theorem s_compile_correct : forall (st : state) (e : aexp),
   s_execute st [] (s_compile e) = [ aeval st e ].
 Proof.
-  (* FILL IN HERE *) Admitted.
+intros st e. apply (s_compile_correct_aux st e []).
+Qed.
 
 (** [] *)
 
@@ -2134,8 +2169,37 @@ Reserved Notation
 Inductive ceval : com -> state -> result -> state -> Prop :=
   | E_Skip : forall st,
       st =[ CSkip ]=> st / SContinue
-  (* FILL IN HERE *)
-
+  | E_Break : forall st, st =[ CBreak ]=> st / SBreak
+  | E_Asgn  : forall st a n x,
+      aeval st a = n ->
+      st =[ x := a ]=> (x !-> n ; st) / SContinue
+  | E_Seq_Continue : forall c1 c2 st st' st'' s,
+      st  =[ c1 ]=> st' / SContinue ->
+      st' =[ c2 ]=> st'' / s ->
+      st  =[ c1 ; c2 ]=> st'' / s
+  | E_Seq_Break : forall c1 c2 st st',
+      st  =[ c1 ]=> st' / SBreak ->
+      st  =[ c1 ; c2 ]=> st' / SBreak
+  | E_IfTrue : forall st st' b c1 c2 s,
+      beval st b = true ->
+      st =[ c1 ]=> st' / s ->
+      st =[ if b then c1 else c2 end]=> st' / s
+  | E_IfFalse : forall st st' b c1 c2 s,
+      beval st b = false ->
+      st =[ c2 ]=> st' / s ->
+      st =[ if b then c1 else c2 end]=> st' / s
+  | E_WhileFalse : forall b st c,
+      beval st b = false ->
+      st =[ while b do c end ]=> st / SContinue
+  | E_WhileTrue_Continue : forall st st' st'' b c,
+      beval st b = true ->
+      st  =[ c ]=> st' / SContinue ->
+      st' =[ while b do c end ]=> st'' / SContinue ->
+      st  =[ while b do c end ]=> st'' / SContinue
+  | E_WhileTrue_Break : forall st st' b c,
+      beval st b = true ->
+      st  =[ c ]=> st' / SBreak ->
+      st  =[ while b do c end ]=> st' / SContinue
   where "st '=[' c ']=>' st' '/' s" := (ceval c st s st').
 
 (** Now prove the following properties of your definition of [ceval]: *)
@@ -2144,34 +2208,52 @@ Theorem break_ignore : forall c st st' s,
      st =[ break; c ]=> st' / s ->
      st = st'.
 Proof.
-  (* FILL IN HERE *) Admitted.
+intros c st st' s H. inversion H.
+- subst. inversion H2.
+- subst. inversion H5. reflexivity.
+Qed.
 
 Theorem while_continue : forall b c st st' s,
   st =[ while b do c end ]=> st' / s ->
   s = SContinue.
 Proof.
-  (* FILL IN HERE *) Admitted.
+intros b c st st' s H. inversion H; reflexivity.
+Qed.
 
 Theorem while_stops_on_break : forall b c st st',
   beval st b = true ->
   st =[ c ]=> st' / SBreak ->
   st =[ while b do c end ]=> st' / SContinue.
 Proof.
-  (* FILL IN HERE *) Admitted.
+intros b c st st' Hb H. inversion H;
+subst; apply E_WhileTrue_Break; assumption.
+Qed.
 
 Theorem seq_continue : forall c1 c2 st st' st'',
   st =[ c1 ]=> st' / SContinue ->
   st' =[ c2 ]=> st'' / SContinue ->
   st =[ c1 ; c2 ]=> st'' / SContinue.
 Proof.
-  (* FILL IN HERE *) Admitted.
+intros c1 c2 st st' st'' H H'.
+apply E_Seq_Continue with (st' := st'); assumption.
+Qed.
 
 Theorem seq_stops_on_break : forall c1 c2 st st',
   st =[ c1 ]=> st' / SBreak ->
   st =[ c1 ; c2 ]=> st' / SBreak.
 Proof.
-  (* FILL IN HERE *) Admitted.
+intros c1 c2 st st' H. apply E_Seq_Break. assumption.
+Qed.
 (** [] *)
+
+Theorem while_infinite : forall b st st' s, beval st b = true ->
+  ~( st =[ while b do skip end ]=> st'/ s).
+Proof.
+intros b st st' s Hb H. remember <{ while b do skip end }> eqn:Eqc. induction H; inversion Eqc.
+- subst. rewrite Hb in H. discriminate H.
+- subst. clear Eqc. inversion H0. subst. apply IHceval2. assumption. reflexivity.
+- subst. clear Eqc. inversion H0.
+Qed.
 
 (** **** Exercise: 3 stars, advanced, optional (while_break_true) *)
 Theorem while_break_true : forall b c st st',
@@ -2179,7 +2261,19 @@ Theorem while_break_true : forall b c st st',
   beval st' b = true ->
   exists st'', st'' =[ c ]=> st' / SBreak.
 Proof.
-(* FILL IN HERE *) Admitted.
+intros b c st st' H.
+intros Hb. remember <{ while b do c end }> eqn:EqW. induction H as [| | | | | |
+(* While False *)
+| b' st'' c' HbContra
+(* While True Continue *)
+| st0  stW st'0 b' c' Hb' Hstc IHC HstW' IHW
+(* While True Break *)
+| 
+]; inversion EqW.
+- subst. rewrite Hb in HbContra. discriminate HbContra.
+- subst. apply IHW. { reflexivity. } { assumption. }
+- subst. exists st. assumption.
+Qed.
 (** [] *)
 
 (** **** Exercise: 4 stars, advanced, optional (ceval_deterministic) *)
@@ -2188,7 +2282,39 @@ Theorem ceval_deterministic: forall (c:com) st st1 st2 s1 s2,
      st =[ c ]=> st2 / s2 ->
      st1 = st2 /\ s1 = s2.
 Proof.
-  (* FILL IN HERE *) Admitted.
+
+Ltac contradicting H H' := rewrite H in H'; discriminate H'.
+
+(** Induction on H_ *)
+intros c st st1 st2 s1 s2 H1. generalize dependent s2. generalize dependent st2. induction H1; 
+try (intros st2 s2 H2; inversion H2; subst; split; reflexivity).
+- intros st2 s2. intros H2. inversion H2.
+  + subst. apply (IHceval1 st'0 _) in H1 as [Eqst _]. rewrite Eqst in *. clear Eqst.
+    apply IHceval2. assumption.
+  + subst. apply IHceval1 in H5 as [_ Contra]. discriminate Contra.
+- intros. inversion H.
+  + subst. apply IHceval in H3 as [_ Contra]. discriminate Contra.
+  + subst. apply IHceval. assumption.
+- intros. inversion H0.
+  + subst. apply IHceval. assumption.
+  + subst. contradicting H H8.
+- intros. inversion H0.
+  + subst. contradicting H H8.
+  + subst. apply IHceval. assumption.
+- intros. inversion H0.
+  + subst. split; reflexivity.
+  + subst. contradicting H H3.
+  + subst. contradicting H H3.
+- intros. inversion H0.
+  + subst. rewrite H in H6. discriminate H6.
+  + subst. apply IHceval1 in H4 as [EqSt0 _]. rewrite EqSt0 in *. clear EqSt0.
+    apply IHceval2. assumption.
+  + subst. clear H3. apply IHceval1 in H7 as [_ Contra]. discriminate Contra.
+- intros. inversion H0.
+  + subst. contradicting H H7.
+  + subst. apply IHceval in H5 as [_ Contra]. discriminate Contra.
+  + subst. apply IHceval in H8 as [Goal _]. split. { assumption. } { reflexivity. }
+Qed.
 
 (** [] *)
 End BreakImp.
