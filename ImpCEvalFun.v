@@ -209,16 +209,17 @@ Proof. reflexivity. Qed.
    [X] (inclusive -- i.e., [1 + 2 + ... + X]) in the variable [Y].  Make
    sure your solution satisfies the test that follows. *)
 
-Definition pup_to_n : com
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition pup_to_n : com :=
+<{ Y := 0; while (X <> 0) do Y := Y + X; X := X - 1 end }>
+.
 
 Example pup_to_n_1 :
   test_ceval (X !-> 5) pup_to_n
   = Some (0, 15, 0).
-(* FILL IN HERE *) Admitted.
-(*
-Proof. reflexivity. Qed.
-*)
+Proof.
+reflexivity.
+Qed.
+
 (** [] *)
 
 (** **** Exercise: 2 stars, standard, optional (peven)
@@ -227,9 +228,16 @@ Proof. reflexivity. Qed.
     sets [Z] to [1] otherwise.  Use [test_ceval] to test your
     program. *)
 
-(* FILL IN HERE
-
-    [] *)
+Definition x_even := <{ while X <> 0 && X <> 1 do X := X - 2 end; Z := X }>.
+Definition x_even_example_even x := test_ceval (X !-> x) x_even = Some (0, 0, 0).
+Definition x_even_example_odd x := test_ceval (X !-> x) x_even = Some (1, 0, 1).
+Definition x_even_example_fail x := test_ceval (X !-> x) x_even = None.
+Example x_even_example_0 : x_even_example_even 0. Proof. reflexivity. Qed.
+Example x_even_example_1 : x_even_example_odd 1. Proof. reflexivity. Qed.
+Example x_even_example_2 : x_even_example_even 2. Proof. reflexivity. Qed.
+Example x_even_example_3 : x_even_example_odd 3. Proof. reflexivity. Qed.
+Example x_even_example_gas_limit_997 : x_even_example_odd 997. Proof. reflexivity. Qed.
+Example x_even_example_gas_limit_998 : x_even_example_fail 998. Proof. reflexivity. Qed.
 
 (* ################################################################# *)
 (** * Relational vs. Step-Indexed Evaluation *)
@@ -351,6 +359,39 @@ induction i1 as [|i1']; intros i2 st st' c Hle Hceval.
       * (* i1'o = None *)
         simpl in Hceval. discriminate Hceval.  Qed.
 
+
+Lemma max_0_both: forall a b, max a b = 0 -> a = 0 /\ b = 0.
+Proof.
+intros a b. destruct a; destruct b.
+- intros _. split; reflexivity.
+- simpl. intros Contra. discriminate Contra.
+- simpl. intros Contra. discriminate Contra.
+- simpl. intros Contra. discriminate Contra.
+Qed.
+
+Lemma max_either: forall a b, (max a b = a /\ b <= a) \/ (max a b = b /\ a <= b).
+Proof.
+intros a. induction a.
+- intros b. destruct b.
+  + left. split.
+    { reflexivity. }
+    { lia. }
+  + right. split. 
+    { reflexivity. }
+    { lia. }
+- intros b. destruct b.
+  + left. split. 
+    { reflexivity. }
+    { lia. }
+  + simpl. destruct (IHa b) as [[L Le] | [R Le]].
+    * left. rewrite L. split. 
+      { reflexivity. }
+      {  lia. }
+    * right. rewrite R. split.
+      { reflexivity. }
+      { lia. }
+Qed.
+
 (** **** Exercise: 3 stars, standard, especially useful (ceval__ceval_step)
 
     Finish the following proof.  You'll need [ceval_step_more] in a
@@ -360,9 +401,36 @@ Theorem ceval__ceval_step: forall c st st',
       st =[ c ]=> st' ->
       exists i, ceval_step st c i = Some st'.
 Proof.
-  intros c st st' Hce.
-  induction Hce.
-  (* FILL IN HERE *) Admitted.
+intros c st st' Hce.
+induction Hce.
+- exists 1. reflexivity.
+- exists 1. simpl. rewrite H. reflexivity.
+
+(* Seq case requires the max of both branches gas *)
+- destruct IHHce1 as [i1 H1]. destruct IHHce2 as [i2 H2].
+  exists (S (Nat.max i1 i2)). simpl.
+  destruct (max_either i1 i2) as [[HMax Hle] | [HMax Hle]].
+  + rewrite HMax. rewrite H1. apply (ceval_step_more i2 i1) in H2; assumption.
+  + rewrite HMax. apply (ceval_step_more i1 i2) in H1. 
+    { rewrite H1. apply H2. }
+    { assumption. }
+
+(* If cases trivial on either branch gas *)
+- destruct IHHce as [i]. exists (S i).
+  simpl. rewrite H. assumption.
+- destruct IHHce as [i]. exists (S i).
+  simpl. rewrite H. assumption.
+
+(* While cases, similar to Seq with the max of two gases *)
+- exists 1. simpl. rewrite H. reflexivity. (* Trivial on false cond *)
+- destruct IHHce1 as [i1 H1]. destruct IHHce2 as [i2 H2].
+  exists (S (Nat.max i1 i2)). simpl. rewrite H.
+  destruct (max_either i1 i2) as [[HMax Hle] | [HMax Hle]].
+  + rewrite HMax. rewrite H1. apply (ceval_step_more i2 i1) in H2; assumption.
+  + rewrite HMax. apply (ceval_step_more i1 i2) in H1. 
+    { rewrite H1. apply H2. }
+    { assumption. }
+Qed.
 (** [] *)
 
 Theorem ceval_and_ceval_step_coincide: forall c st st',
