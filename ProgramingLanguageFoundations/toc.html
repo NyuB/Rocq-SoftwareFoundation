@@ -1,0 +1,1504 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="common/css/sf.css" rel="stylesheet" type="text/css" />
+<title>Table of contents</title>
+<link href="common/jquery-ui/jquery-ui.css" rel="stylesheet">
+<script src="common/jquery-ui/external/jquery/jquery.js"></script>
+<script src="common/jquery-ui/jquery-ui.js"></script>
+<script src="common/toggleproofs.js"></script>
+<link href="common/css/plf.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body><script>
+$( function() {
+    var icons = {
+      header: "ui-icon-circle-arrow-e",
+      activeHeader: "ui-icon-circle-arrow-s"
+    };
+
+    $("#accordion").accordion({
+      collapsible : true,
+      active : false,
+      icons : icons,
+      heightStyle : 'content'
+    });
+
+    // Enable navigation links in section headers
+    $('#accordion').each(function() {
+      this.addEventListener('click', ev => {
+        if ($(ev.target).closest('a').length > 0) ev.stopPropagation();
+      }, {capture: true});
+    });
+  } );
+</script>
+
+
+<div id="page">
+
+<div id="header">
+<div id='logoinheader'><a href='https://softwarefoundations.cis.upenn.edu'>
+<img src='common/media/image/sf_logo_sm.png' alt='Software Foundations Logo'></a></div>
+<div class='booktitleinheader'><a href='index.html'>Volume 2: Programming Language Foundations</a></div>
+<ul id='menu'>
+   <li class='section_name'><a href='toc.html'>Table of Contents</a></li>
+   <li class='section_name'><a href='coqindex.html'>Index</a></li>
+   <li class='section_name'><a href='deps.html'>Roadmap</a></li>
+</ul>
+</div>
+</div>
+
+<div id="main">
+
+<div id="toc">
+<div id="accordion">
+<h2><a href="Preface.html">Preface</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="Preface.html#lab1">Welcome</a>
+
+</li>
+<li><a href="Preface.html#lab2">Overview</a>
+<div>
+<ul class="doclist">
+<li><a href="Preface.html#lab3">Program Verification</a>
+
+</li>
+<li><a href="Preface.html#lab4">Type Systems</a>
+
+</li>
+<li><a href="Preface.html#lab5">Further Reading</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="Preface.html#lab6">Practicalities</a>
+<div>
+<ul class="doclist">
+<li><a href="Preface.html#lab7">Recommended Citation Format</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="Preface.html#lab8">Note for Instructors</a>
+
+</li>
+<li><a href="Preface.html#lab9">Thanks</a>
+
+</li>
+</ul>
+</div>
+<h2><a href="Equiv.html">Program Equivalence &nbsp;&nbsp; (<i>Equiv</i>)</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="Equiv.html#lab12">Behavioral Equivalence</a>
+<div>
+<ul class="doclist">
+<li><a href="Equiv.html#lab13">Definitions</a>
+
+</li>
+<li><a href="Equiv.html#lab14">Simple Examples</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="Equiv.html#lab24">Properties of Behavioral Equivalence</a>
+<div>
+<ul class="doclist">
+<li><a href="Equiv.html#lab25">Behavioral Equivalence is an Equivalence</a>
+
+</li>
+<li><a href="Equiv.html#lab26">Behavioral Equivalence Is a Congruence</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="Equiv.html#lab30">Program Transformations</a>
+<div>
+<ul class="doclist">
+<li><a href="Equiv.html#lab31">The Constant-Folding Transformation</a>
+
+</li>
+<li><a href="Equiv.html#lab32">Soundness of Constant Folding</a>
+
+</li>
+<li><a href="Equiv.html#lab35">Soundness of (0 + n) Elimination, Redux</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="Equiv.html#lab37">Proving Inequivalence</a>
+
+</li>
+<li><a href="Equiv.html#lab40">Extended Exercise: Nondeterministic Imp</a>
+
+</li>
+<li><a href="Equiv.html#lab48">Additional Exercises</a>
+
+</li>
+</ul>
+</div>
+<h2><a href="Hoare.html">Hoare Logic, Part I &nbsp;&nbsp; (<i>Hoare</i>)</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="Hoare.html#lab52">Assertions</a>
+<div>
+<ul class="doclist">
+<li><a href="Hoare.html#lab54">Notations for Assertions</a>
+
+</li>
+<li><a href="Hoare.html#lab55">Example Assertions</a>
+
+</li>
+<li><a href="Hoare.html#lab56">Assertion Implication</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="Hoare.html#lab57">Hoare Triples, Informally</a>
+
+</li>
+<li><a href="Hoare.html#lab60">Hoare Triples, Formally</a>
+
+</li>
+<li><a href="Hoare.html#lab63">Proof Rules</a>
+<div>
+<ul class="doclist">
+<li><a href="Hoare.html#lab64">Skip</a>
+
+</li>
+<li><a href="Hoare.html#lab65">Sequencing</a>
+
+</li>
+<li><a href="Hoare.html#lab66">Assignment</a>
+
+</li>
+<li><a href="Hoare.html#lab72">Consequence</a>
+
+</li>
+<li><a href="Hoare.html#lab73">Automation</a>
+
+</li>
+<li><a href="Hoare.html#lab75">Sequencing + Assignment</a>
+
+</li>
+<li><a href="Hoare.html#lab79">Conditionals</a>
+
+</li>
+<li><a href="Hoare.html#lab86">While Loops</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="Hoare.html#lab89">Summary</a>
+
+</li>
+<li><a href="Hoare.html#lab90">Additional Exercises</a>
+<div>
+<ul class="doclist">
+<li><a href="Hoare.html#lab91">Havoc</a>
+
+</li>
+<li><a href="Hoare.html#lab94">Assert and Assume</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+</ul>
+</div>
+<h2><a href="Hoare2.html">Hoare Logic, Part II &nbsp;&nbsp; (<i>Hoare2</i>)</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="Hoare2.html#lab96">Decorated Programs</a>
+<div>
+<ul class="doclist">
+<li><a href="Hoare2.html#lab97">Example: Swapping</a>
+
+</li>
+<li><a href="Hoare2.html#lab98">Example: Simple Conditionals</a>
+
+</li>
+<li><a href="Hoare2.html#lab100">Example: Reduce to Zero</a>
+
+</li>
+<li><a href="Hoare2.html#lab101">Example: Division</a>
+
+</li>
+<li><a href="Hoare2.html#lab102">From Decorated Programs to Formal Proofs</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="Hoare2.html#lab103">Formal Decorated Programs</a>
+<div>
+<ul class="doclist">
+<li><a href="Hoare2.html#lab104">Syntax</a>
+
+</li>
+<li><a href="Hoare2.html#lab105">Extracting Verification Conditions</a>
+
+</li>
+<li><a href="Hoare2.html#lab106">More Automation</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="Hoare2.html#lab109">Finding Loop Invariants</a>
+<div>
+<ul class="doclist">
+<li><a href="Hoare2.html#lab110">Example: Slow Subtraction</a>
+
+</li>
+<li><a href="Hoare2.html#lab111">Exercise: Slow Assignment</a>
+
+</li>
+<li><a href="Hoare2.html#lab113">Example: Parity</a>
+
+</li>
+<li><a href="Hoare2.html#lab115">Example: Finding Square Roots</a>
+
+</li>
+<li><a href="Hoare2.html#lab117">Example: Squaring</a>
+
+</li>
+<li><a href="Hoare2.html#lab118">Exercise: Factorial</a>
+
+</li>
+<li><a href="Hoare2.html#lab120">Exercise: Minimum</a>
+
+</li>
+<li><a href="Hoare2.html#lab122">Exercise: Two Loops</a>
+
+</li>
+<li><a href="Hoare2.html#lab124">Exercise: Power Series</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="Hoare2.html#lab129">Weakest Preconditions (Optional)</a>
+
+</li>
+</ul>
+</div>
+<h2><a href="HoareAsLogic.html">Hoare Logic as a Logic &nbsp;&nbsp; (<i>HoareAsLogic</i>)</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="HoareAsLogic.html#lab134">Hoare Logic and Model Theory</a>
+
+</li>
+<li><a href="HoareAsLogic.html#lab135">Hoare Logic and Proof Theory</a>
+
+</li>
+<li><a href="HoareAsLogic.html#lab136">Derivability</a>
+
+</li>
+<li><a href="HoareAsLogic.html#lab139">Soundness and Completeness</a>
+
+</li>
+<li><a href="HoareAsLogic.html#lab144">Postscript: Decidability</a>
+
+</li>
+</ul>
+</div>
+<h2><a href="Smallstep.html">Small-step Operational Semantics &nbsp;&nbsp; (<i>Smallstep</i>)</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="Smallstep.html#lab145">A Toy Language</a>
+
+</li>
+<li><a href="Smallstep.html#lab147">Relations</a>
+<div>
+<ul class="doclist">
+<li><a href="Smallstep.html#lab148">Values</a>
+
+</li>
+<li><a href="Smallstep.html#lab150">Strong Progress and Normal Forms</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="Smallstep.html#lab160">Multi-Step Reduction</a>
+<div>
+<ul class="doclist">
+<li><a href="Smallstep.html#lab161">Examples</a>
+
+</li>
+<li><a href="Smallstep.html#lab165">Normal Forms Again</a>
+
+</li>
+<li><a href="Smallstep.html#lab168">Equivalence of Big-Step and Small-Step</a>
+
+</li>
+<li><a href="Smallstep.html#lab173">Additional Exercises</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="Smallstep.html#lab177">Small-Step Imp</a>
+
+</li>
+<li><a href="Smallstep.html#lab178">Concurrent Imp</a>
+
+</li>
+<li><a href="Smallstep.html#lab181">A Small-Step Stack Machine</a>
+
+</li>
+<li><a href="Smallstep.html#lab183">Aside: A <span class="inlinecode"><span class="id" title="var">normalize</span></span> Tactic</a>
+
+</li>
+</ul>
+</div>
+<h2><a href="Types.html">Type Systems &nbsp;&nbsp; (<i>Types</i>)</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="Types.html#lab186">Typed Arithmetic Expressions</a>
+<div>
+<ul class="doclist">
+<li><a href="Types.html#lab187">Syntax</a>
+
+</li>
+<li><a href="Types.html#lab188">Operational Semantics</a>
+
+</li>
+<li><a href="Types.html#lab189">Normal Forms and Values</a>
+
+</li>
+<li><a href="Types.html#lab193">Typing</a>
+
+</li>
+<li><a href="Types.html#lab196">Progress</a>
+
+</li>
+<li><a href="Types.html#lab199">Type Preservation</a>
+
+</li>
+<li><a href="Types.html#lab203">Type Soundness</a>
+
+</li>
+<li><a href="Types.html#lab204">Additional Exercises</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+</ul>
+</div>
+<h2><a href="Stlc.html">The Simply Typed Lambda-Calculus &nbsp;&nbsp; (<i>Stlc</i>)</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="Stlc.html#lab215">Overview</a>
+
+</li>
+<li><a href="Stlc.html#lab216">Syntax</a>
+<div>
+<ul class="doclist">
+<li><a href="Stlc.html#lab217">Types</a>
+
+</li>
+<li><a href="Stlc.html#lab218">Terms</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="Stlc.html#lab219">Operational Semantics</a>
+<div>
+<ul class="doclist">
+<li><a href="Stlc.html#lab220">Values</a>
+
+</li>
+<li><a href="Stlc.html#lab221">Substitution</a>
+
+</li>
+<li><a href="Stlc.html#lab223">Reduction</a>
+
+</li>
+<li><a href="Stlc.html#lab224">Examples</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="Stlc.html#lab226">Typing</a>
+<div>
+<ul class="doclist">
+<li><a href="Stlc.html#lab227">Contexts</a>
+
+</li>
+<li><a href="Stlc.html#lab228">Typing Relation</a>
+
+</li>
+<li><a href="Stlc.html#lab229">Examples</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+</ul>
+</div>
+<h2><a href="StlcProp.html">Properties of STLC &nbsp;&nbsp; (<i>StlcProp</i>)</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="StlcProp.html#lab233">Canonical Forms</a>
+
+</li>
+<li><a href="StlcProp.html#lab234">Progress</a>
+
+</li>
+<li><a href="StlcProp.html#lab236">Preservation</a>
+<div>
+<ul class="doclist">
+<li><a href="StlcProp.html#lab237">The Weakening Lemma</a>
+
+</li>
+<li><a href="StlcProp.html#lab238">The Substitution Lemma</a>
+
+</li>
+<li><a href="StlcProp.html#lab240">Main Theorem</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="StlcProp.html#lab242">Type Soundness</a>
+
+</li>
+<li><a href="StlcProp.html#lab244">Uniqueness of Types</a>
+
+</li>
+<li><a href="StlcProp.html#lab246">Context Invariance (Optional)</a>
+
+</li>
+<li><a href="StlcProp.html#lab251">Additional Exercises</a>
+<div>
+<ul class="doclist">
+<li><a href="StlcProp.html#lab260">Exercise: STLC with Arithmetic</a>
+
+</li>
+<li><a href="StlcProp.html#lab262">The Technical Theorems</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+</ul>
+</div>
+<h2><a href="MoreStlc.html">More on the Simply Typed Lambda-Calculus &nbsp;&nbsp; (<i>MoreStlc</i>)</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="MoreStlc.html#lab266">Simple Extensions to STLC</a>
+<div>
+<ul class="doclist">
+<li><a href="MoreStlc.html#lab267">Numbers</a>
+
+</li>
+<li><a href="MoreStlc.html#lab268">Let Bindings</a>
+
+</li>
+<li><a href="MoreStlc.html#lab269">Pairs</a>
+
+</li>
+<li><a href="MoreStlc.html#lab270">Unit</a>
+
+</li>
+<li><a href="MoreStlc.html#lab271">Sums</a>
+
+</li>
+<li><a href="MoreStlc.html#lab272">Lists</a>
+
+</li>
+<li><a href="MoreStlc.html#lab273">General Recursion</a>
+
+</li>
+<li><a href="MoreStlc.html#lab276">Records</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="MoreStlc.html#lab279">Exercise: Formalizing the Extensions</a>
+<div>
+<ul class="doclist">
+<li><a href="MoreStlc.html#lab287">Examples</a>
+
+</li>
+<li><a href="MoreStlc.html#lab296">Properties of Typing</a>
+
+</li>
+<li><a href="MoreStlc.html#lab299">Weakening</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+</ul>
+</div>
+<h2><a href="Sub.html">Subtyping &nbsp;&nbsp; (<i>Sub</i>)</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="Sub.html#lab304">Concepts</a>
+<div>
+<ul class="doclist">
+<li><a href="Sub.html#lab305">A Motivating Example</a>
+
+</li>
+<li><a href="Sub.html#lab306">Subtyping and Object-Oriented Languages</a>
+
+</li>
+<li><a href="Sub.html#lab307">The Subsumption Rule</a>
+
+</li>
+<li><a href="Sub.html#lab308">The Subtype Relation</a>
+
+</li>
+<li><a href="Sub.html#lab316">Exercises</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="Sub.html#lab330">Formal Definitions</a>
+<div>
+<ul class="doclist">
+<li><a href="Sub.html#lab331">Core Definitions</a>
+
+</li>
+<li><a href="Sub.html#lab335">Subtyping</a>
+
+</li>
+<li><a href="Sub.html#lab339">Typing</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="Sub.html#lab343">Properties</a>
+<div>
+<ul class="doclist">
+<li><a href="Sub.html#lab344">Inversion Lemmas for Subtyping</a>
+
+</li>
+<li><a href="Sub.html#lab350">Canonical Forms</a>
+
+</li>
+<li><a href="Sub.html#lab352">Progress</a>
+
+</li>
+<li><a href="Sub.html#lab353">Inversion Lemmas for Typing</a>
+
+</li>
+<li><a href="Sub.html#lab356">Weakening</a>
+
+</li>
+<li><a href="Sub.html#lab357">Substitution</a>
+
+</li>
+<li><a href="Sub.html#lab358">Preservation</a>
+
+</li>
+<li><a href="Sub.html#lab359">Records, via Products and Top</a>
+
+</li>
+<li><a href="Sub.html#lab360">Exercises</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="Sub.html#lab362">Exercise: Adding Products</a>
+<div>
+<ul class="doclist">
+<li><a href="Sub.html#lab364">Formalized "Thought Exercises"</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+</ul>
+</div>
+<h2><a href="Typechecking.html">A Typechecker for STLC &nbsp;&nbsp; (<i>Typechecking</i>)</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="Typechecking.html#lab385">Comparing Types</a>
+
+</li>
+<li><a href="Typechecking.html#lab386">The Typechecker</a>
+
+</li>
+<li><a href="Typechecking.html#lab387">Digression: Improving the Notation</a>
+
+</li>
+<li><a href="Typechecking.html#lab388">Properties</a>
+
+</li>
+<li><a href="Typechecking.html#lab389">Exercises</a>
+
+</li>
+</ul>
+</div>
+<h2><a href="Records.html">Adding Records to STLC &nbsp;&nbsp; (<i>Records</i>)</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="Records.html#lab401">Adding Records</a>
+
+</li>
+<li><a href="Records.html#lab402">Formalizing Records</a>
+<div>
+<ul class="doclist">
+<li><a href="Records.html#lab408">Examples</a>
+
+</li>
+<li><a href="Records.html#lab410">Properties of Typing</a>
+
+</li>
+<li><a href="Records.html#lab414">Weakening</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+</ul>
+</div>
+<h2><a href="References.html">Typing Mutable References &nbsp;&nbsp; (<i>References</i>)</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="References.html#lab416">Definitions</a>
+
+</li>
+<li><a href="References.html#lab417">Syntax</a>
+
+</li>
+<li><a href="References.html#lab422">Pragmatics</a>
+<div>
+<ul class="doclist">
+<li><a href="References.html#lab423">Side Effects and Sequencing</a>
+
+</li>
+<li><a href="References.html#lab424">References and Aliasing</a>
+
+</li>
+<li><a href="References.html#lab425">Shared State</a>
+
+</li>
+<li><a href="References.html#lab426">Objects</a>
+
+</li>
+<li><a href="References.html#lab428">References to Compound Types</a>
+
+</li>
+<li><a href="References.html#lab430">Null References</a>
+
+</li>
+<li><a href="References.html#lab431">Garbage Collection</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="References.html#lab433">Operational Semantics</a>
+<div>
+<ul class="doclist">
+<li><a href="References.html#lab434">Locations</a>
+
+</li>
+<li><a href="References.html#lab435">Stores</a>
+
+</li>
+<li><a href="References.html#lab436">Reduction</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="References.html#lab437">Typing</a>
+<div>
+<ul class="doclist">
+<li><a href="References.html#lab438">Store typings</a>
+
+</li>
+<li><a href="References.html#lab440">The Typing Relation</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="References.html#lab441">Properties</a>
+<div>
+<ul class="doclist">
+<li><a href="References.html#lab442">Well-Typed Stores</a>
+
+</li>
+<li><a href="References.html#lab444">Extending Store Typings</a>
+
+</li>
+<li><a href="References.html#lab445">Preservation, Finally</a>
+
+</li>
+<li><a href="References.html#lab446">Substitution Lemma</a>
+
+</li>
+<li><a href="References.html#lab447">Assignment Preserves Store Typing</a>
+
+</li>
+<li><a href="References.html#lab448">Weakening for Stores</a>
+
+</li>
+<li><a href="References.html#lab449">Preservation!</a>
+
+</li>
+<li><a href="References.html#lab451">Progress</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="References.html#lab452">References and Nontermination</a>
+
+</li>
+<li><a href="References.html#lab454">Additional Exercises</a>
+
+</li>
+</ul>
+</div>
+<h2><a href="RecordSub.html">Subtyping with Records &nbsp;&nbsp; (<i>RecordSub</i>)</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="RecordSub.html#lab456">Core Definitions</a>
+
+</li>
+<li><a href="RecordSub.html#lab461">Subtyping</a>
+<div>
+<ul class="doclist">
+<li><a href="RecordSub.html#lab462">Definition</a>
+
+</li>
+<li><a href="RecordSub.html#lab463">Examples</a>
+
+</li>
+<li><a href="RecordSub.html#lab468">Properties of Subtyping</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="RecordSub.html#lab474">Typing</a>
+<div>
+<ul class="doclist">
+<li><a href="RecordSub.html#lab475">Typing Examples</a>
+
+</li>
+<li><a href="RecordSub.html#lab479">Properties of Typing</a>
+
+</li>
+<li><a href="RecordSub.html#lab485">Weakening</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+</ul>
+</div>
+<h2><a href="Norm.html">Normalization of STLC &nbsp;&nbsp; (<i>Norm</i>)</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="Norm.html#lab488">Language</a>
+<div>
+<ul class="doclist">
+<li><a href="Norm.html#lab489">Syntax and Operational Semantics</a>
+
+</li>
+<li><a href="Norm.html#lab490">Substitution</a>
+
+</li>
+<li><a href="Norm.html#lab491">Reduction</a>
+
+</li>
+<li><a href="Norm.html#lab492">Typing</a>
+
+</li>
+<li><a href="Norm.html#lab493">Weakening</a>
+
+</li>
+<li><a href="Norm.html#lab494">Substitution</a>
+
+</li>
+<li><a href="Norm.html#lab495">Preservation</a>
+
+</li>
+<li><a href="Norm.html#lab496">Free Variables and Closed Terms</a>
+
+</li>
+<li><a href="Norm.html#lab497">Determinism</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="Norm.html#lab498">Normalization</a>
+<div>
+<ul class="doclist">
+<li><a href="Norm.html#lab501">First Proof Attempt</a>
+
+</li>
+<li><a href="Norm.html#lab502">The <span class="inlinecode"><span class="id" title="var">N</span></span> relation</a>
+
+</li>
+<li><a href="Norm.html#lab504">Membership in <span class="inlinecode"><span class="id" title="var">N_T</span></span> Is Invariant Under Reduction</a>
+
+</li>
+<li><a href="Norm.html#lab507">Second Proof Attempt</a>
+
+</li>
+<li><a href="Norm.html#lab508">Closing Multi-substitutions and Instantiations</a>
+
+</li>
+<li><a href="Norm.html#lab519">Properties of N Instantiations</a>
+
+</li>
+<li><a href="Norm.html#lab521">Congruence Lemmas on Multistep</a>
+
+</li>
+<li><a href="Norm.html#lab523">Completed Proof using N</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="Norm.html#lab525">Type Safety via a Logical Predicate (Optional)</a>
+<div>
+<ul class="doclist">
+<li><a href="Norm.html#lab526">First Proof Attempt</a>
+
+</li>
+<li><a href="Norm.html#lab527"><span class="inlinecode"><span class="id" title="var">St</span></span> and <span class="inlinecode"><span class="id" title="var">Sv</span></span> Predicates</a>
+
+</li>
+<li><a href="Norm.html#lab530">Semantic Typing</a>
+
+</li>
+<li><a href="Norm.html#lab532">More Properties of Substitution and Instantiation</a>
+
+</li>
+<li><a href="Norm.html#lab534">Inversion lemmas about multistepping</a>
+
+</li>
+<li><a href="Norm.html#lab537">Syntactic Typing implies Semantic Typing</a>
+
+</li>
+<li><a href="Norm.html#lab539">Safety Theorem</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+</ul>
+</div>
+<h2><a href="PE.html">Partial Evaluation &nbsp;&nbsp; (<i>PE</i>)</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="PE.html#lab540">Generalizing Constant Folding</a>
+<div>
+<ul class="doclist">
+<li><a href="PE.html#lab541">Partial States</a>
+
+</li>
+<li><a href="PE.html#lab542">Arithmetic Expressions</a>
+
+</li>
+<li><a href="PE.html#lab543">Boolean Expressions</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="PE.html#lab544">Partial Evaluation of Commands, Without Loops</a>
+<div>
+<ul class="doclist">
+<li><a href="PE.html#lab545">Assignment</a>
+
+</li>
+<li><a href="PE.html#lab546">Conditional</a>
+
+</li>
+<li><a href="PE.html#lab547">The Partial Evaluation Relation</a>
+
+</li>
+<li><a href="PE.html#lab548">Examples</a>
+
+</li>
+<li><a href="PE.html#lab549">Correctness of Partial Evaluation</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="PE.html#lab550">Partial Evaluation of Loops</a>
+<div>
+<ul class="doclist">
+<li><a href="PE.html#lab551">Examples</a>
+
+</li>
+<li><a href="PE.html#lab552">Correctness</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="PE.html#lab553">Partial Evaluation of Flowchart Programs</a>
+<div>
+<ul class="doclist">
+<li><a href="PE.html#lab554">Basic blocks</a>
+
+</li>
+<li><a href="PE.html#lab555">Flowchart programs</a>
+
+</li>
+<li><a href="PE.html#lab556">Partial Evaluation of Basic Blocks and Flowchart Programs</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+</ul>
+</div>
+<h2><a href="Postscript.html">Postscript</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="Postscript.html#lab557">Looking Back</a>
+
+</li>
+<li><a href="Postscript.html#lab558">Looking Around</a>
+
+</li>
+<li><a href="Postscript.html#lab567">Looking Forward</a>
+
+</li>
+</ul>
+</div>
+<h2><a href="Bib.html">Bibliography &nbsp;&nbsp; (<i>Bib</i>)</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="Bib.html#lab568">Resources cited in this volume</a>
+
+</li>
+</ul>
+</div>
+<h2><a href="LibTactics.html">A Collection of Handy General-Purpose Tactics &nbsp;&nbsp; (<i>LibTactics</i>)</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="LibTactics.html#lab569">Fixing Stdlib</a>
+
+</li>
+<li><a href="LibTactics.html#lab570">Tools for Programming with Ltac</a>
+<div>
+<ul class="doclist">
+<li><a href="LibTactics.html#lab571">Identity Continuation</a>
+
+</li>
+<li><a href="LibTactics.html#lab572">Untyped Arguments for Tactics</a>
+
+</li>
+<li><a href="LibTactics.html#lab573">Optional Arguments for Tactics</a>
+
+</li>
+<li><a href="LibTactics.html#lab574">Wildcard Arguments for Tactics</a>
+
+</li>
+<li><a href="LibTactics.html#lab575">Position Markers</a>
+
+</li>
+<li><a href="LibTactics.html#lab576">List of Arguments for Tactics</a>
+
+</li>
+<li><a href="LibTactics.html#lab577">Databases of Lemmas</a>
+
+</li>
+<li><a href="LibTactics.html#lab578">On-the-Fly Removal of Hypotheses</a>
+
+</li>
+<li><a href="LibTactics.html#lab579">Numbers as Arguments</a>
+
+</li>
+<li><a href="LibTactics.html#lab580">Testing Tactics</a>
+
+</li>
+<li><a href="LibTactics.html#lab581">Testing evars and non-evars</a>
+
+</li>
+<li><a href="LibTactics.html#lab582">Check No Evar in Goal</a>
+
+</li>
+<li><a href="LibTactics.html#lab583">Helper Function for Introducing Evars</a>
+
+</li>
+<li><a href="LibTactics.html#lab584">Tagging of Hypotheses</a>
+
+</li>
+<li><a href="LibTactics.html#lab585">More Tagging of Hypotheses</a>
+
+</li>
+<li><a href="LibTactics.html#lab586">Deconstructing Terms</a>
+
+</li>
+<li><a href="LibTactics.html#lab587">Action at Occurence and Action Not at Occurence</a>
+
+</li>
+<li><a href="LibTactics.html#lab588">An Alias for <span class="inlinecode"><span class="id" title="var">eq</span></span></a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="LibTactics.html#lab589">Check as a tactic instead of a top-level command, with possibility to turn off</a>
+
+</li>
+<li><a href="LibTactics.html#lab590">Common Tactics for Simplifying Goals Like <span class="inlinecode"><span class="id" title="tactic">intuition</span></span></a>
+
+</li>
+<li><a href="LibTactics.html#lab591">Backward and Forward Chaining</a>
+<div>
+<ul class="doclist">
+<li><a href="LibTactics.html#lab592">Application</a>
+
+</li>
+<li><a href="LibTactics.html#lab593">Assertions</a>
+
+</li>
+<li><a href="LibTactics.html#lab594">Instantiation and Forward-Chaining</a>
+
+</li>
+<li><a href="LibTactics.html#lab595">Experimental Tactics for Application</a>
+
+</li>
+<li><a href="LibTactics.html#lab596">Adding Assumptions</a>
+
+</li>
+<li><a href="LibTactics.html#lab597">Application of Tautologies</a>
+
+</li>
+<li><a href="LibTactics.html#lab598">Application Modulo Equalities</a>
+
+</li>
+<li><a href="LibTactics.html#lab599">Absurd Goals</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="LibTactics.html#lab600">Introduction and Generalization</a>
+<div>
+<ul class="doclist">
+<li><a href="LibTactics.html#lab601">Introduction</a>
+
+</li>
+<li><a href="LibTactics.html#lab602">Introduction using <span class="inlinecode">⇒</span> and <span class="inlinecode">=&gt;&gt;</span></a>
+
+</li>
+<li><a href="LibTactics.html#lab603">Generalization</a>
+
+</li>
+<li><a href="LibTactics.html#lab604">Naming</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="LibTactics.html#lab605">Rewriting</a>
+<div>
+<ul class="doclist">
+<li><a href="LibTactics.html#lab606">Replace</a>
+
+</li>
+<li><a href="LibTactics.html#lab607">Change</a>
+
+</li>
+<li><a href="LibTactics.html#lab608">Renaming</a>
+
+</li>
+<li><a href="LibTactics.html#lab609">Unfolding</a>
+
+</li>
+<li><a href="LibTactics.html#lab610">Simplification</a>
+
+</li>
+<li><a href="LibTactics.html#lab611">Reduction</a>
+
+</li>
+<li><a href="LibTactics.html#lab612">Substitution</a>
+
+</li>
+<li><a href="LibTactics.html#lab613">Tactics to Work with Proof Irrelevance</a>
+
+</li>
+<li><a href="LibTactics.html#lab614">Proving Equalities</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="LibTactics.html#lab615">Inversion</a>
+<div>
+<ul class="doclist">
+<li><a href="LibTactics.html#lab616">Basic Inversion</a>
+
+</li>
+<li><a href="LibTactics.html#lab617">Inversion with Substitution</a>
+
+</li>
+<li><a href="LibTactics.html#lab618">Injection with Substitution</a>
+
+</li>
+<li><a href="LibTactics.html#lab619">Inversion and Injection with Substitution --rough implementation</a>
+
+</li>
+<li><a href="LibTactics.html#lab620">Case Analysis</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="LibTactics.html#lab621">Induction</a>
+
+</li>
+<li><a href="LibTactics.html#lab622">Coinduction</a>
+
+</li>
+<li><a href="LibTactics.html#lab623">Decidable Equality</a>
+
+</li>
+<li><a href="LibTactics.html#lab624">Equivalence</a>
+
+</li>
+<li><a href="LibTactics.html#lab625">N-ary Conjunctions and Disjunctions</a>
+
+</li>
+<li><a href="LibTactics.html#lab626">Tactics to Prove Typeclass Instances</a>
+
+</li>
+<li><a href="LibTactics.html#lab627">Tactics to Invoke Automation</a>
+<div>
+<ul class="doclist">
+<li><a href="LibTactics.html#lab628">Definitions for Parsing Compatibility</a>
+
+</li>
+<li><a href="LibTactics.html#lab629"><span class="inlinecode"><span class="id" title="var">hint</span></span> to Add Hints Local to a Lemma</a>
+
+</li>
+<li><a href="LibTactics.html#lab630"><span class="inlinecode"><span class="id" title="var">jauto</span></span>, a New Automation Tactic</a>
+
+</li>
+<li><a href="LibTactics.html#lab631">Definitions of Automation Tactics</a>
+
+</li>
+<li><a href="LibTactics.html#lab632">Parsing for Light Automation</a>
+
+</li>
+<li><a href="LibTactics.html#lab633">Parsing for Strong Automation</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="LibTactics.html#lab634">Tactics to Sort Out the Proof Context</a>
+<div>
+<ul class="doclist">
+<li><a href="LibTactics.html#lab635">Hiding Hypotheses</a>
+
+</li>
+<li><a href="LibTactics.html#lab636">Sorting Hypotheses</a>
+
+</li>
+<li><a href="LibTactics.html#lab637">Clearing Hypotheses</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="LibTactics.html#lab638">Tactics for Development Purposes</a>
+<div>
+<ul class="doclist">
+<li><a href="LibTactics.html#lab639">Skipping Subgoals</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="LibTactics.html#lab640">Compatibility with standard library</a>
+
+</li>
+</ul>
+</div>
+<h2><a href="UseTactics.html">Tactic Library for Rocq: A Gentle Introduction &nbsp;&nbsp; (<i>UseTactics</i>)</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="UseTactics.html#lab641">Tactics for Naming and Performing Inversion</a>
+<div>
+<ul class="doclist">
+<li><a href="UseTactics.html#lab642">The Tactic <span class="inlinecode"><span class="id" title="var">introv</span></span></a>
+
+</li>
+<li><a href="UseTactics.html#lab643">The Tactic <span class="inlinecode"><span class="id" title="var">inverts</span></span></a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="UseTactics.html#lab644">Tactics for N-ary Connectives</a>
+<div>
+<ul class="doclist">
+<li><a href="UseTactics.html#lab645">The Tactic <span class="inlinecode"><span class="id" title="var">splits</span></span></a>
+
+</li>
+<li><a href="UseTactics.html#lab646">The Tactic <span class="inlinecode"><span class="id" title="var">branch</span></span></a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="UseTactics.html#lab647">Tactics for Working with Equality</a>
+<div>
+<ul class="doclist">
+<li><a href="UseTactics.html#lab648">The Tactic <span class="inlinecode"><span class="id" title="var">asserts_rewrite</span></span></a>
+
+</li>
+<li><a href="UseTactics.html#lab649">The Tactic <span class="inlinecode"><span class="id" title="var">fequals</span></span></a>
+
+</li>
+<li><a href="UseTactics.html#lab650">The Tactic <span class="inlinecode"><span class="id" title="var">applys_eq</span></span></a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="UseTactics.html#lab651">Some Convenient Shorthands</a>
+<div>
+<ul class="doclist">
+<li><a href="UseTactics.html#lab652">The Tactic <span class="inlinecode"><span class="id" title="var">unfolds</span></span></a>
+
+</li>
+<li><a href="UseTactics.html#lab653">The Tactics <span class="inlinecode"><span class="id" title="var">false</span></span> and <span class="inlinecode"><span class="id" title="var">tryfalse</span></span></a>
+
+</li>
+<li><a href="UseTactics.html#lab654">The Tactic <span class="inlinecode"><span class="id" title="var">gen</span></span></a>
+
+</li>
+<li><a href="UseTactics.html#lab655">The Tactics <span class="inlinecode"><span class="id" title="var">admits</span></span>, <span class="inlinecode"><span class="id" title="var">admit_rewrite</span></span> and <span class="inlinecode"><span class="id" title="var">admit_goal</span></span></a>
+
+</li>
+<li><a href="UseTactics.html#lab656">The Tactic <span class="inlinecode"><span class="id" title="var">sort</span></span></a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="UseTactics.html#lab657">Tactics for Advanced Lemma Instantiation</a>
+<div>
+<ul class="doclist">
+<li><a href="UseTactics.html#lab658">Working of <span class="inlinecode"><span class="id" title="var">lets</span></span></a>
+
+</li>
+<li><a href="UseTactics.html#lab659">Working of <span class="inlinecode"><span class="id" title="var">applys</span></span>, <span class="inlinecode"><span class="id" title="var">forwards</span></span> and <span class="inlinecode"><span class="id" title="var">specializes</span></span></a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="UseTactics.html#lab660">Summary</a>
+
+</li>
+</ul>
+</div>
+<h2><a href="UseAuto.html">Theory and Practice of Automation in Rocq Proofs &nbsp;&nbsp; (<i>UseAuto</i>)</a></h2>
+<div>
+<ul class="doclist">
+<li><a href="UseAuto.html#lab661">Basic Features of Proof Search</a>
+<div>
+<ul class="doclist">
+<li><a href="UseAuto.html#lab662">Strength of Proof Search</a>
+
+</li>
+<li><a href="UseAuto.html#lab663">Basics</a>
+
+</li>
+<li><a href="UseAuto.html#lab664">Conjunctions</a>
+
+</li>
+<li><a href="UseAuto.html#lab665">Disjunctions</a>
+
+</li>
+<li><a href="UseAuto.html#lab666">Existentials</a>
+
+</li>
+<li><a href="UseAuto.html#lab667">Negation</a>
+
+</li>
+<li><a href="UseAuto.html#lab668">Equalities</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="UseAuto.html#lab669">How Proof Search Works</a>
+<div>
+<ul class="doclist">
+<li><a href="UseAuto.html#lab670">Search Depth</a>
+
+</li>
+<li><a href="UseAuto.html#lab671">Backtracking</a>
+
+</li>
+<li><a href="UseAuto.html#lab672">Adding Hints</a>
+
+</li>
+<li><a href="UseAuto.html#lab673">Integration of Automation in Tactics</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="UseAuto.html#lab674">Example Proofs using Automation</a>
+<div>
+<ul class="doclist">
+<li><a href="UseAuto.html#lab675">Determinism</a>
+
+</li>
+<li><a href="UseAuto.html#lab676">Preservation for STLC</a>
+
+</li>
+<li><a href="UseAuto.html#lab677">Progress for STLC</a>
+
+</li>
+<li><a href="UseAuto.html#lab678">BigStep and SmallStep</a>
+
+</li>
+<li><a href="UseAuto.html#lab679">Preservation for STLCRef</a>
+
+</li>
+<li><a href="UseAuto.html#lab680">Progress for STLCRef</a>
+
+</li>
+<li><a href="UseAuto.html#lab681">Subtyping</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="UseAuto.html#lab682">Advanced Topics in Proof Search</a>
+<div>
+<ul class="doclist">
+<li><a href="UseAuto.html#lab683">Stating Lemmas in the Right Way</a>
+
+</li>
+<li><a href="UseAuto.html#lab684">Unfolding of Definitions During Proof-Search</a>
+
+</li>
+<li><a href="UseAuto.html#lab685">Automation for Proving Absurd Goals</a>
+
+</li>
+<li><a href="UseAuto.html#lab686">Automation for Transitivity Lemmas</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="UseAuto.html#lab687">Decision Procedures</a>
+<div>
+<ul class="doclist">
+<li><a href="UseAuto.html#lab688">Lia</a>
+
+</li>
+<li><a href="UseAuto.html#lab689">Ring</a>
+
+</li>
+<li><a href="UseAuto.html#lab690">Congruence</a>
+
+</li>
+</ul>
+</div>
+
+</li>
+<li><a href="UseAuto.html#lab691">Summary</a>
+
+</li>
+</ul>
+</div>
+</div>
+<hr/>This page has been generated by <a href="http://rocq-prover.org/">coqdoc</a>
+</div>
+
+</div>
+
+</div>
+</body>
+</html>
