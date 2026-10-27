@@ -45,5 +45,6 @@ Keeping track of my progress through the books, with remarkable exercises highli
 
 ### Programing Language Foundations
 
-- 🛠️[Equiv](./ProgramingLanguageFoundations/Equiv.v)
+- ✅[Equiv](./ProgramingLanguageFoundations/Equiv.v)
+- 🛠️[Hoare](./ProgramingLanguageFoundations/Hoare.v)
 

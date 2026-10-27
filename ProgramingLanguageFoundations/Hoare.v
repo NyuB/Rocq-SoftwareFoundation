@@ -104,15 +104,24 @@ Definition Assertion := state -> Prop.
     natural language). *)
 
 Module ExAssertions.
+(* holds for states where the value of X is less than or equal to the value of Y *)
 Definition assertion1 : Assertion := fun st => st X <= st Y.
+
+(* holds for states where either the value of X is 3 or 'assertion1' holds *)
 Definition assertion2 : Assertion :=
   fun st => st X = 3 \/ st X <= st Y.
+
+(* holds for states where
+the value of Z squared is less than or equal to the value of X
+and the value of (1 + Z) squared is grater than he value of X
+*)
 Definition assertion3 : Assertion :=
   fun st => st Z * st Z <= st X /\
             ~ (((S (st Z)) * (S (st Z))) <= st X).
+
+(* holds for states where either the value of Z is the maximum of the values of X and Y *)
 Definition assertion4 : Assertion :=
   fun st => st Z = max (st X) (st Y).
-(* FILL IN HERE *)
 End ExAssertions.
 (** [] *)
 
@@ -322,26 +331,26 @@ Notation "P <<->> Q" := (P ->> Q /\ Q ->> P)
     Paraphrase the following in English.
 
      1) {{True}} c {{X = 5}}
+        When c terminates the value of X is 5
 
      2) forall m, {{X = m}} c {{X = m + 5)}}
-
+        For all begining value m of X, when c terminates the value of X is M + 5
      3) {{X <= Y}} c {{Y <= X}}
 
      4) {{True}} c {{False}}
-
+        c never terminates
      5) forall m,
           {{X = m}}
           c
           {{Y = real_fact m}}
-
+        For all begining value m of X, when c terminates the value of Y is real_fact m
+          
      6) forall m,
           {{X = m}}
           c
           {{(Z * Z) <= m /\ ~ (((S Z) * (S Z)) <= m)}}
+        For all begining value m of X, when c terminates the value of Z squared is less than or equal to m and the value of (Z+1) squared is greater than m
 *)
-(* FILL IN HERE
-
-    [] *)
 
 (** **** Exercise: 1 star, standard, optional (valid_triples)
 
@@ -349,30 +358,28 @@ Notation "P <<->> Q" := (P ->> Q /\ Q ->> P)
     claimed relation between [P], [c], and [Q] is true?
 
    1) {{True}} X := 5 {{X = 5}}
-
+      Valid
    2) {{X = 2}} X := X + 1 {{X = 3}}
-
+      Valid
    3) {{True}} X := 5; Y := 0 {{X = 5}}
-
+      Valid  
    4) {{X = 2 /\ X = 3}} X := 5 {{X = 0}}
-
+      Invalid
    5) {{True}} skip {{False}}
-
+      Invalid
    6) {{False}} skip {{True}}
-
+      Valid (exfalso)
    7) {{True}} while true do skip end {{False}}
-
+      Valid (never terminates)
    8) {{X = 0}}
         while X = 0 do X := X + 1 end
       {{X = 1}}
-
+      Valid
    9) {{X = 1}}
         while X <> 0 do X := X + 1 end
       {{X = 100}}
+      Valid (never terminates)
 *)
-(* FILL IN HERE
-
-    [] *)
 
 (* ################################################################# *)
 (** * Hoare Triples, Formally *)
@@ -403,7 +410,8 @@ Theorem hoare_post_true : forall (P Q : Assertion) c,
   (forall st, Q st) ->
   {{P}} c {{Q}}.
 Proof.
-  (* FILL IN HERE *) Admitted.
+intros P Q c H. intros _ st' _ _. apply H.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard, optional (hoare_pre_false) *)
@@ -415,7 +423,9 @@ Theorem hoare_pre_false : forall (P Q : Assertion) c,
   (forall st, ~ (P st)) ->
   {{P}} c {{Q}}.
 Proof.
-  (* FILL IN HERE *) Admitted.
+intros P Q c H st st' _ HP. exfalso. eapply H. apply HP.
+Qed.
+
 (** [] *)
 
 (* ################################################################# *)
@@ -717,7 +727,9 @@ Example hoare_asgn_examples1 :
       X := 2 * X
     {{ X <= 10 }}.
 Proof.
-  (* FILL IN HERE *) Admitted.
+exists {{ (X <= 10) [X |-> 2 * X] }}. apply hoare_asgn.
+Qed.
+
 (** [] *)
 
 (** **** Exercise: 2 stars, standard, optional (hoare_asgn_examples2) *)
@@ -726,7 +738,9 @@ Example hoare_asgn_examples2 :
     {{ P }}
       X := 3
     {{ 0 <=  X /\ X <= 5 }}.
-Proof. (* FILL IN HERE *) Admitted.
+Proof.
+exists {{ (0 <= X /\ X <= 5) [X |-> 3] }}. apply hoare_asgn.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, standard, especially useful (hoare_asgn_wrong) *)
@@ -748,10 +762,15 @@ Proof. (* FILL IN HERE *) Admitted.
 Theorem hoare_asgn_wrong : exists a:aexp,
   ~ {{ True }} X := a {{ X = a }}.
 Proof.
-  (* FILL IN HERE *) Admitted.
-(* FILL IN HERE
-
-    [] *)
+exists <{ X + 1 }>. intros H. unfold valid_hoare_triple in H.
+specialize H with empty_st (X !-> 1).
+assert ((X !-> 1) X = 2) as Contra. {
+apply H.
+  + apply E_Asgn. reflexivity.
+  + apply I.
+} 
+discriminate Contra.
+Qed.
 
 (** **** Exercise: 3 stars, advanced, optional (hoare_asgn_fwd)
 
@@ -779,7 +798,11 @@ Theorem hoare_asgn_fwd :
   {{ $(fun st => (P (X !-> m ; st)
              /\ st X = aeval (X !-> m ; st) a)) }}.
 Proof.
-  (* FILL IN HERE *) Admitted.
+intros m a P. intros st st' A. inversion A. subst. intros [Pst Xst].
+simpl in Xst. subst. split.
+- simpl. rewrite t_update_shadow. rewrite t_update_same. apply Pst.
+- rewrite t_update_eq. rewrite t_update_shadow. rewrite t_update_same. reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, advanced, optional (hoare_asgn_fwd_exists)
@@ -802,7 +825,12 @@ Theorem hoare_asgn_fwd_exists :
   {{ $(fun st => exists m, P (X !-> m ; st) /\
                 st X = aeval (X !-> m ; st) a) }}.
 Proof.
-  (* FILL IN HERE *) Admitted.
+intros a P st st' A. inversion A. subst. intros Pst.
+exists (st X). split.
+- rewrite t_update_shadow. rewrite t_update_same. apply Pst.
+- rewrite t_update_eq. rewrite t_update_shadow. rewrite t_update_same. reflexivity.
+Qed.
+
 (** [] *)
 
 (* ================================================================= *)
@@ -896,7 +924,7 @@ Proof.
   eapply hoare_consequence_pre.
   - apply hoare_asgn.
   - unfold "->>", assertion_sub, t_update; simpl.
-    intros st _. reflexivity.
+    intros _ _. reflexivity.
 Qed.
 
 (** We can also use it to prove the example mentioned earlier.
@@ -1133,14 +1161,20 @@ Example assertion_sub_ex1' :
     X := 2 * X
   {{ X <= 10 }}.
 Proof.
-  (* FILL IN HERE *) Admitted.
+eapply hoare_consequence_pre.
+- apply hoare_asgn.
+- assertion_auto.
+Qed.
 
 Example assertion_sub_ex2' :
   {{ 0 <= 3 /\ 3 <= 5 }}
     X := 3
   {{ 0 <= X /\ X <= 5 }}.
 Proof.
-  (* FILL IN HERE *) Admitted.
+eapply hoare_consequence_pre.
+- apply hoare_asgn.
+- assertion_auto.
+Qed.
 
 (** [] *)
 
@@ -1197,14 +1231,17 @@ Qed.
    We've started you off by providing a use of [hoare_seq] that
    explicitly identifies [X = 1] as the intermediate assertion. *)
 
+Ltac hoare_asgn_auto := 
+ eapply hoare_consequence_pre; [apply hoare_asgn | assertion_auto].
+
 Example hoare_asgn_example4 :
   {{ True }}
     X := 1;
     Y := 2
   {{ X = 1 /\ Y = 2 }}.
 Proof.
-  eapply hoare_seq with (Q := {{ X = 1 }}).
-  (* FILL IN HERE *) Admitted.
+eapply hoare_seq with (Q := {{ X = 1 }}); hoare_asgn_auto.
+Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, standard (swap_exercise)
@@ -1225,15 +1262,22 @@ Proof.
          and work back to the beginning of your program.
        - Remember that [eapply] is your friend.)  *)
 
-Definition swap_program : com
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition swap_program : com :=
+<{
+  Z := X;
+  X := Y;
+  Y := Z
+}>.
 
 Theorem swap_exercise :
   {{X <= Y}}
     swap_program
   {{Y <= X}}.
 Proof.
-  (* FILL IN HERE *) Admitted.
+apply hoare_seq with (Q := {{X <= Y /\ Z <= Y}}).
+- apply hoare_seq with (Q := {{ Z <= X}}); hoare_asgn_auto.
+- hoare_asgn_auto. 
+Qed.
 (** [] *)
 
 (** **** Exercise: 4 stars, advanced (invalid_triple)
@@ -1274,7 +1318,24 @@ Theorem invalid_triple : ~ forall (a : aexp) (n : nat),
 Proof.
   unfold valid_hoare_triple.
   intros H.
-  (* FILL IN HERE *) Admitted.
+  specialize H with
+  (a := AId X)
+  (n := 2)
+  (st := ( X !-> 2))
+  (st' := (Y !-> 3; X !-> 3; X !-> 2))
+  .
+  simpl in H.
+  assert ((Y !-> 3; X !-> 3; X !-> 2) Y = 2) as Contra.
+  {
+    apply H.
+    - eapply E_Seq.
+      + apply E_Asgn. reflexivity.
+      + apply E_Asgn. reflexivity.
+    - reflexivity.
+  }
+  rewrite t_update_eq in Contra. discriminate Contra.
+Qed.
+
 (** [] *)
 
 (* ================================================================= *)
@@ -1392,9 +1453,7 @@ Proof.
       simpl. intros st [_ H]. apply eqb_eq in H.
       rewrite H. lia.
   - (* Else *)
-    eapply hoare_consequence_pre.
-    + apply hoare_asgn.
-    + assertion_auto.
+    hoare_asgn_auto.
 Qed.
 
 (** As we did earlier, it would be nice to eliminate all the low-level
@@ -1468,7 +1527,14 @@ Theorem if_minus_plus :
     end
   {{Y = X + Z}}.
 Proof.
-  (* FILL IN HERE *) Admitted.
+apply hoare_if.
+- eapply hoare_consequence_pre.
+  + apply hoare_asgn.
+  + assertion_auto''.
+- eapply hoare_consequence_pre.
+  + apply hoare_asgn.
+  + assertion_auto''.
+Qed.
 (** [] *)
 
 (* ----------------------------------------------------------------- *)
@@ -1554,7 +1620,18 @@ Inductive ceval : com -> state -> state -> Prop :=
       st  =[ c ]=> st' ->
       st' =[ while b do c end ]=> st'' ->
       st  =[ while b do c end ]=> st''
-(* FILL IN HERE *)
+  (* Resisting the temptation to express If1 as a regular If 
+  | E_If1 : forall st st' b c,
+    st =[ if b then c else skip end ]=> st' ->
+    st =[ if1 b then c end ]=> st'
+  *)
+  | E_IfTrue1 : forall st st' b c,
+      beval st b = true ->
+      st =[ c ]=> st' ->
+      st =[ if1 b then c end ]=> st'
+  | E_IfFalse1 : forall st b c,
+      beval st b = false ->
+      st =[ if1 b then c end ]=> st
 
 where "st '=[' c ']=>' st'" := (ceval c st st').
 
@@ -1565,11 +1642,11 @@ Hint Constructors ceval : core.
 
 Example if1true_test :
   empty_st =[ if1 X = 0 then X := 1 end ]=> (X !-> 1).
-Proof. (* FILL IN HERE *) Admitted.
+Proof. eauto. Qed.
 
 Example if1false_test :
   (X !-> 2) =[ if1 X = 0 then X := 1 end ]=> (X !-> 2).
-Proof. (* FILL IN HERE *) Admitted.
+Proof. eauto. Qed.
 
 (** [] *)
 
@@ -1606,7 +1683,20 @@ Notation "{{ P }} c {{ Q }}" :=
     be in the assertion scope.  For example, if you want [e] to be
     parsed as an assertion, write it as [(e)%assertion]. *)
 
-(* FILL IN HERE *)
+
+Theorem hoare_if1 : forall P Q (b:bexp) c,
+  {{ P /\ b }} c {{Q}} ->
+  {{ P /\ ~b }} ->> {{Q}} ->
+  {{P}} if1 b then c end {{Q}}.
+Proof.
+intros P Q b c H H' st st' HC. inversion HC; subst.
+- intros HP. eapply H.
+  + eauto.
+  + split; simpl; assumption.
+- intros HP. apply H'. simpl. split.
+  + assumption.
+  + congruence.
+Qed.
 
 (** For example ([hoare_if1_good]) your rule should be strong
     enough to show the following Hoare triple is valid:
@@ -1617,6 +1707,7 @@ Notation "{{ P }} c {{ Q }}" :=
     end
   {{ X = Z }}
 *)
+
 (* Do not modify the following line: *)
 Definition manual_grade_for_hoare_if1 : option (nat*string) := None.
 (** [] *)
@@ -1654,13 +1745,25 @@ Qed.
     definition or theorem [e.g., hoare_skip] from above this exercise
     without re-proving it for the new version of Imp with if1. *)
 
+Lemma neg_not_true: forall b, negb b <> true <-> b = true.
+Proof.
+split; destruct b; simpl; congruence.
+Qed.
+
 Lemma hoare_if1_good :
   {{ X + Y = Z }}
     if1 Y <> 0 then
       X := X + Y
     end
   {{ X = Z }}.
-Proof. (* FILL IN HERE *) Admitted.
+Proof.
+apply hoare_if1.
+- eapply hoare_consequence_pre.
+  + apply hoare_asgn.
+  + assertion_auto.
+- assertion_auto''. destruct H as [HXYZ HY]. apply neg_not_true in HY. apply eqb_eq in HY.
+  rewrite HY in *. rewrite <- plus_n_O in HXYZ. apply HXYZ.
+Qed.
 (** [] *)
 
 End If1.
@@ -1886,7 +1989,15 @@ Inductive ceval : state -> com -> state -> Prop :=
       st  =[ c ]=> st' ->
       st' =[ while b do c end ]=> st'' ->
       st  =[ while b do c end ]=> st''
-(* FILL IN HERE *)
+  | E_RepeatFalse : forall st st' st'' b c,
+      beval st' b = false ->
+      st  =[ c ]=> st' ->
+      st' =[ repeat c until b end ]=> st'' ->
+      st  =[ repeat c until b end ]=> st''
+  | E_RepeatTrue : forall st st' b c,
+      beval st' b = true ->
+      st  =[ c ]=> st' ->
+      st  =[ repeat c until b end ]=> st'
 
 where "st '=[' c ']=>' st'" := (ceval st c st').
 
@@ -1914,13 +2025,35 @@ Definition ex1_repeat :=
 Theorem ex1_repeat_works :
   empty_st =[ ex1_repeat ]=> (Y !-> 1 ; X !-> 1).
 Proof.
-  (* FILL IN HERE *) Admitted.
+eapply E_RepeatTrue.
+- reflexivity.
+- eapply E_Seq.
+  + apply E_Asgn. reflexivity.
+  + apply E_Asgn. reflexivity.
+Qed.
 
 (** Now state and prove a theorem, [hoare_repeat], that expresses an
     appropriate proof rule for [repeat] commands.  Use [hoare_while]
     as a model, and try to make your rule as precise as possible. *)
 
-(* FILL IN HERE *)
+Theorem hoare_repeat : forall P Q (b:bexp) c,
+  {{P}} c {{Q}} ->
+  {{Q /\ ~b}} c {{Q}} ->
+  {{P}} repeat c until b end {{ b /\ Q}}.
+Proof.
+intros P Q b c H H' st st'. remember <{repeat c until b end}> as Eq. intros HRepeat.
+induction HRepeat; inversion HeqEq; subst.
+- intros HP. apply (H) in HRepeat1. apply HRepeat1 in HP as HQ'.
+  inversion HRepeat2; subst.
+  +  
+
+ apply IHHRepeat2.
+  + reflexivity.
+  + admit.
+- intros HP. split.
+  + simpl in *. assumption.
+  + eapply H; eassumption.
+Admitted.
 
 (** For full credit, make sure (informally) that your rule can be used
     to prove the following valid Hoare triple:
@@ -1932,6 +2065,20 @@ Proof.
     until X = 0 end
   {{ X = 0 /\ Y > 0 }}
 *)
+Lemma example:   {{ X > 0 }}
+    repeat
+      Y := X;
+      X := X - 1
+    until X = 0 end
+  {{ X = 0 /\ Y > 0 }}.
+Proof.
+unfold Assertion.
+apply hoare_repeat with 
+(P := {{X > 0}})
+(Q := {{ Y > 0}})
+(c := <{Y := X; X := X - 1}>)
+.
+Qed.
 
 End RepeatExercise.
 
